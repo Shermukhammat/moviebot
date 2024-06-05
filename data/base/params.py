@@ -1,4 +1,6 @@
 import json
+import os
+
 
 class Params:
     def __init__(self, file : str) -> None:
@@ -35,6 +37,7 @@ def load_params(path_json : str) -> dict:
 
 
 if __name__ == '__main__':
+    #{"pasword": "354abc", "ownerId": 1234}
     pa = Params('test.json')
     # pa.update_pasword('354abc')
-    print(pa.PASWORD)
+    # print(pa.PASWORD)

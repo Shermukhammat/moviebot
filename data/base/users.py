@@ -1,32 +1,15 @@
 import sqlite3
-if __name__ == '__main__':
-    from params import Params
-    from data.base.clock import now
-else:
-    from .params import Params 
-    from .base.clock import now
-
+from clock import now
 
 class Status:
-    def __init__(self) -> None:
-        self.active = 1
-        self.blocked = 2
-
-class Test:
-    def __init__(self, blah : int) -> None:
-        self.blah = blah
-
-class DataBase(Params):
-    def __init__(self, db_path : str, params_path : str) -> None:
-        self.status = Status()
-        Params.__init__(params_path)
+    active = 1
+    blocked = 2
         
-        
+
+class UsersDb:
+    def __init__(self, db_path : str) -> None:
         self.path = db_path 
-        creat_tables(db_path)
-
         self.users_cache = {}
-        self.admins_cache = {}
     
     def is_user(self, id : int) -> bool:
         if self.users_cache.get(id):
@@ -40,7 +23,7 @@ class DataBase(Params):
 
     def register_user(self, id : int, name : str):
         time = now()
-        status = self.status.active
+        status = Status.active
         
         try:
             con = sqlite3.connect(self.path)
@@ -58,17 +41,14 @@ class DataBase(Params):
             return False
         
     
-    def get_user(self, id):
+    def get_user(self, id) -> dict:
         data = self.users_cache.get(id)
         if data:
             return data
         data = get_user_from_db(self.path, id)
-        self.users_cache[id] = data
-        return data 
-    
-    def clean_caches(self):
-        self.users_cache.clear()
-        self.admins_cache.clear()
+        if data:
+            self.users_cache[id] = data
+            return data 
         
     
     def remove_user(self, id):
@@ -87,12 +67,12 @@ class DataBase(Params):
         if self.users_cache.get(id):
             self.users_cache[id]['status'] = status 
         
-        return updat_user_db_status(self.path, status)
+        return updat_user_db_status(self.path, status, id)
        
 
 
 
-def updat_user_db_status(path : str, status : int) -> bool:
+def updat_user_db_status(path : str, status : int, id : int) -> bool:
     try:
         con = sqlite3.connect(path)
         cursor = con.cursor()
@@ -115,28 +95,13 @@ def get_user_from_db(db_path : str, id : int) -> dict:
         return {'registered' : row[0], 'status' : row[1], 'name' : row[2]}
     
     con.close()
-    return {}
-
-def creat_tables(db_path : str):
-    con = sqlite3.connect(db_path)
-    cursor = con.cursor()
     
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY, name, registered, status INTEGER); """)
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS amdmins(id INTEGER PRIMARY KEY, name, registered, owner INTEGER); """)
-    
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS movies(id INTEGER PRIMARY KEY, name, lang, country, gener, year INTEGER, duration, image_url); """)
-    cursor.execute(""" CREATE TABLE IF NOT EXISTS movies_resolution(id INTEGER, movie_id INTEGER, resolution INTEGER); """)
-    
-    con.commit()
-    con.close()
-
 
 if __name__ == '__main__':
-    db = DataBase('test.db', 'test.json')
-    db.register_user(123454, 'sher')
+    db = UsersDb('test.db')
+    # db.register_user(2, 'sher2')
+    db.get_user(1)
     
-    print(db.users_cache)
-    print(db.get_user(123454))
-    print(db.get_user(123454))
+    # db.update_user_status(1, Status.blocked)
     print(db.users_cache)
     
