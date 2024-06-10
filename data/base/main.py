@@ -3,17 +3,20 @@ if __name__ == '__main__':
     from params import Params
     from users import UsersDb
     from admins import AdminsDb
+    from movies import MoviesDb, Movie
 else:
     from .params import Params 
     from .users import UsersDb
 
 
-class DataBase(Params, UsersDb, AdminsDb):
+class DataBase(Params, UsersDb, AdminsDb, MoviesDb):
     def __init__(self, dbFilePath : str, paramsJsonPath : str) -> None:
-        self.path = dbFilePath
         Params.__init__(self, paramsJsonPath)
         UsersDb.__init__(self, dbFilePath)
-        AdminsDb.__init__(self, db_path = dbFilePath)
+        AdminsDb.__init__(self, dbFilePath)
+        MoviesDb.__init__(self, dbFilePath)
+        
+    
         
         
         
