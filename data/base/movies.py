@@ -29,7 +29,7 @@ class Movie:
 class MoviesDb:
     def __init__(self, db_path : str) -> None:
         self.path = db_path
-        self.movies_title_cache = {}
+        self.movies_title_cache = get_movies_title_from_db(db_path)
         self.movies_cache = {}
     
     def get_movie(self, id : int) -> Movie:
@@ -40,6 +40,9 @@ class MoviesDb:
             self.movies_cache[id] = movie
             self.movies_title_cache[movie.title] = movie.id
             return movie 
+        
+    # def get_movies(self) -> li:
+        
         
     
     def add_movie(self, movie : Movie):        
@@ -76,27 +79,44 @@ def get_movie_from_db(path : str, id : int) -> Movie:
                      duration = row[7])
     
     con.close()
+
+def get_movies_title_from_db(path : str) -> dict:
+    con = sqlite3.connect(path)
+    cursor = con.cursor()
+    data = {}
+    
+    for row in cursor.execute("SELECT title, id FROM movies;"):
+        data[row[0]] = row[1]
+    
+    con.close()
+    return data
     
 def get_movies_from_db(path : str) -> dict:
     con = sqlite3.connect(path)
     cursor = con.cursor()
     data = {}
     
-    for row in cursor.execute(""" SELECT id, title, image_url, lang, country, gener, year, duration FROM movies; """):        
-        movie = Movie(id, row[1], row[2], {}, 
+    rows = cursor.execute(""" SELECT id, title, image_url, lang, country, gener, year, duration FROM movies; """)       
+    for row in rows.fetchall():
+        qualities = get_resolutions(cursor, row[0])
+        movie = Movie(row[0], row[1], row[2], qualities, 
                      lang = row[3], 
                      country = row[4], 
                      genere = row[5], 
                      year = row[6], 
                      duration = row[7])
         
-        for row2 in cursor.execute(f""" SELECT resolution, data_id FROM movies_quality WHERE movie_id = ?; """, (movie.id,)):
-            movie.qualities[row2[0]] = row2[1]
-        
         data[movie.id] = movie
     
     con.close()
     return data
+    
+def get_resolutions(cursor : sqlite3.Cursor, id : int) -> dict:
+    qualities = {}
+    for row in cursor.execute(f""" SELECT resolution, data_id FROM movies_quality WHERE movie_id = ? ; """, (id,)):
+        qualities[row[0]] = row[1]
+    
+    return qualities
 
 def add_movie_to_db(path : str, movie : Movie) -> bool:
     con = sqlite3.connect(path)
@@ -116,18 +136,24 @@ def add_movie_to_db(path : str, movie : Movie) -> bool:
 
 
 if __name__ == '__main__':
-    # movie = Movie(1, 'qasoskorlar', 'www.ex.io', {360 : 1, 480 : 2, 720 : 3})
+    movie = Movie(5, 'qasoskorlar 5', 'www.ex.io', {360 : 1, 480 : 2, 720 : 3})
     db = MoviesDb('test.db')
     
-    # db.add_movie(movie)
-    db.get_movie(1)
-    for title in ['tor', 'Oskar', 'Smurflar', 'silicon valley', 'smurflar 3', 'tezlik', 'manyak', "O'rgimchak odam"]:
-        db.movies_title_cache[title] = 1
+    # print(db.add_movie(movie))
+    # db.get_movie(1)
+    # for title in ['tor', 'Oskar', 'Smurflar', 'silicon valley', 'smurflar 3', 'tezlik', 'manyak', "O'rgimchak odam"]:
+    #     db.movies_title_cache[title] = 1
+        
+    # # for n in range(10_000):
+    # #     db.movies_title_cache[f'name{n}'] = n
     
-    n = input('start')   
-    print(db.search_movie("tez", limit=50))
+    # n = input('start')   
+    # print(db.search_movie("tez", limit=50))
     # def show(movie : Movie):
     #     print(movie.id, movie.title, movie.image_url, movie.country)
         
     # for movie in db.movies_cache.values():
     #     show(movie)
+    
+    # print(get_movies_from_db('test.db'))
+    print(get_movies_title_from_db('test.db'))
