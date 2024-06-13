@@ -1,1 +1,1 @@
-from base.main import DataBase
+from .base.main import DataBase

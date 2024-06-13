@@ -1,5 +1,5 @@
 import sqlite3
-from clock import now
+from .clock import now
 
 class Status:
     active = 1
