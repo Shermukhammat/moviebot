@@ -2,13 +2,13 @@ import sqlite3
 if __name__ == '__main__':
     from params import Params
     from users import UsersDb
-    from admins import AdminsDb
+    from admins import AdminsDb, AdminType
     from movies import MoviesDb, Movie
     from tables import creat_tables
 else:
     from .params import Params
     from .users import UsersDb
-    from .admins import AdminsDb
+    from .admins import AdminsDb, AdminType
     from .movies import MoviesDb, Movie
     from .tables import creat_tables
 

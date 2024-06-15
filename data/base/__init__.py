@@ -1,1 +1,1 @@
-from .main import DataBase
+from .main import DataBase, AdminType

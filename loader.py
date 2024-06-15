@@ -1,7 +1,7 @@
 from aiogram import Bot, Dispatcher, types
 from config import API_TOKEN, BOT_NAME, BOT_USER_NAME
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
-from data import DataBase
+from data import DataBase, AdminType
 from utilities.states import AdminStates, UserStates 
 from utilities.buttons import InlineButtons
 
