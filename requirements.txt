@@ -15,4 +15,7 @@ multidict==6.0.5
 python-Levenshtein==0.25.1
 pytz==2024.1
 rapidfuzz==3.9.3
+requests==2.32.3
+telegraph==2.2.0
+urllib3==2.2.2
 yarl==1.9.4
