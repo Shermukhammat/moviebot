@@ -1,4 +1,4 @@
-from loader import dp, bot, db, UserStates, AdminStates, BOT_NAME, types, InlineButtons
+from loader import dp, bot, db, UserStates, AdminStates, BOT_NAME, types, InlineButtons, DefoltButtons
 from aiogram.dispatcher import FSMContext
 
 
@@ -33,4 +33,11 @@ async def user_handler(update : types.Message, state : FSMContext):
 
 
 async def admin_handler(update : types.Message, state : FSMContext):
-    pass
+    if update.text == "➕ Kino qo'shish":
+        await state.set_state(AdminStates.get_movie_title)
+        await update.answer(f"Ok, [{update.from_user.first_name}]({update.from_user.url}) kino nomni kiriting", 
+                            reply_markup = DefoltButtons.cancle_button,
+                            parse_mode = types.ParseMode.MARKDOWN)
+
+    else:
+        await update.answer('menu', reply_markup = DefoltButtons.adminMenu())

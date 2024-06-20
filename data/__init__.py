@@ -1,1 +1,1 @@
-from .base.main import DataBase, AdminType
+from .base.main import DataBase, AdminType, Movie

@@ -9,6 +9,7 @@ class Params:
         
         self.PASWORD = self.data.get('pasword')
         self.OWNER_ID = self.data.get('ownerId')
+        self.TELEGRAPH_TOKEN = self.data.get('telegraph_token')
         
     
     def update(self):
