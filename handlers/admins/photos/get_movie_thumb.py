@@ -32,6 +32,7 @@ async def get_movie_thumb2(update : types.Message, state : FSMContext):
 
         if update.caption:
             data['caption'] = update.caption
+            
             return
     
     await state.set_state(AdminStates.get_movie_caption)
