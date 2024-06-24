@@ -1,4 +1,4 @@
-from loader import dp, bot, db, UserStates, AdminStates, BOT_NAME, types, InlineButtons, DefoltButtons, Movie, picsum
+from loader import dp, bot, db, AdminStates, BOT_NAME, types, InlineButtons, DefoltButtons, Movie, picsum
 from aiogram.dispatcher import FSMContext
 import os
 
@@ -27,18 +27,45 @@ async def get_movie_thumb2(update : types.Message, state : FSMContext):
     url = await picsum.get_photo_poster_url(path)
     os.remove(path)
 
+    if not url:
+        return
+
+
+
+
+
+    await state.set_state(AdminStates.get_movie_video_resolution)
+    
     async with state.proxy() as data:
         data['thumb'] = url
-
+        
         if update.caption:
-            data['caption'] = update.caption
-            
-            return
-    
-    await state.set_state(AdminStates.get_movie_caption)
-    await update.answer("Kino haqida malumot(caption) kiriting")
+            message_data = await bot.copy_message(chat_id = db.DATA_CHANEL_ID, 
+                                                  from_chat_id = update.from_user.id, 
+                                                  message_id = update.message_id)
+        else:
+            message_data = await bot.copy_message(chat_id = db.DATA_CHANEL_ID, 
+                                                  from_chat_id = update.from_user.id, 
+                                                  message_id = update.message_id,
+                                                  caption = 'Kino\'nomi: ' + data['title'])
+        
+        data['id'] = message_data.message_id
 
-    # print(await state.get_data())
+
+        await bot.copy_message(chat_id = update.from_user.id,
+                               from_chat_id = db.DATA_CHANEL_ID,
+                               message_id = data['id'],
+                               caption = f"Kino nomi: {data['title']} ",
+                               reply_markup = InlineButtons.movie_add_menu())
+            
+
+
+
+
+@dp.channel_post_handler()
+async def chanel_handler(update : types.Message):
+    print(update.sender_chat.title)
+    print(update.sender_chat.id)
 
 
     

@@ -1,43 +1,28 @@
-from loader import dp, bot, db, UserStates, AdminStates, BOT_NAME, types, InlineButtons, DefoltButtons
+from loader import dp, bot, db, UserStates, BOT_NAME, types, InlineButtons, DefoltButtons
 from aiogram.dispatcher import FSMContext
 
 
-
-@dp.message_handler()
-async def main_user_text_handler(update : types.Message, state : FSMContext):
-    if db.is_user(update.from_user.id):
-        await user_handler(update, state)
-
-    elif db.is_admin(update.from_user.id):
-        await admin_handler(update, state)
-
-    else:
-        db.register_user(update.from_user.id, update.from_user.first_name)
-
-        await bot.set_my_commands(commands = [types.BotCommand(command = 'start', description = '✈️ Botni ishga tushrish'),
-                                              types.BotCommand(command = 'manual', description = "📖 Botdan foydalanish qo'llanmasi")],
-                                  scope = types.BotCommandScopeChat(chat_id = update.from_user.id))
-        
-        await update.answer(f"👋 Assalomu alykum [{update.from_user.first_name}]({update.from_user.url}), xush kelibsiz! 🤖 Men {BOT_NAME}man \n🎬 Kino kodni kirting yoki 🔍 kino izlash tugmasni bosing", 
-                            parse_mode = types.ParseMode.MARKDOWN,
-                            reply_markup = InlineButtons.search_movie)
-        
-
+@dp.message_handler(lambda update : db.is_user(update.from_user.id))
 async def user_handler(update : types.Message, state : FSMContext):
     if update.text.isnumeric():
         pass
     
     else:
         await update.answer("Kino kodni kiriting yoki kino izlash tugmasini bosing")
+
+
+
+@dp.message_handler()
+async def main_user_text_handler(update : types.Message, state : FSMContext):
+    db.register_user(update.from_user.id, update.from_user.first_name)
+
+    await bot.set_my_commands(commands = [types.BotCommand(command = 'start', description = '✈️ Botni ishga tushrish'),
+                                              types.BotCommand(command = 'manual', description = "📖 Botdan foydalanish qo'llanmasi")],
+                                  scope = types.BotCommandScopeChat(chat_id = update.from_user.id))
+        
+    await update.answer(f"👋 Assalomu alykum [{update.from_user.first_name}]({update.from_user.url}), xush kelibsiz! 🤖 Men {BOT_NAME}man \n🎬 Kino kodni kirting yoki 🔍 kino izlash tugmasni bosing", 
+                            parse_mode = types.ParseMode.MARKDOWN,
+                            reply_markup = InlineButtons.search_movie)
         
 
 
-async def admin_handler(update : types.Message, state : FSMContext):
-    if update.text == "➕ Kino qo'shish":
-        await state.set_state(AdminStates.get_movie_title)
-        await update.answer(f"Ok, [{update.from_user.first_name}]({update.from_user.url}) kino nomni kiriting", 
-                            reply_markup = DefoltButtons.cancle_button,
-                            parse_mode = types.ParseMode.MARKDOWN)
-
-    else:
-        await update.answer('menu', reply_markup = DefoltButtons.adminMenu())
