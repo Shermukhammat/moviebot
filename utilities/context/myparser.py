@@ -28,8 +28,8 @@ def get_params(text : str) -> tuple[int, list[str]]:
 
 
 
-def split_pattern(text : str):
-    print(re.split(r'\{[^}]*\}', text))
+def split_pattern(text : str) -> list[str]:
+    return re.split(r'\{[^}]*\}', text)
 
 def join_pattern(patter : list[str], params : list[str]) -> str:
     resolt = ''
@@ -42,7 +42,7 @@ def join_pattern(patter : list[str], params : list[str]) -> str:
     return resolt
  
 
-def get_params(params : list[str], args : dict[str, str]) -> list[str]:
+def add_params(params : list[str], args : dict[str, str]) -> list[str]:
     resolt = []
     for param in params:
         if args.get(param):

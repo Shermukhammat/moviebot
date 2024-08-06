@@ -1,5 +1,5 @@
 hello:
-  pattern: salom {name}, qandaysiz?
-  uz: salom {name}, qandaysiz?
-  ru: привет, {имя}, как дела?
-  en: hi {name}, how are you?
+  pattern: salom , qandaysiz?
+  uz: salom , qandaysiz?
+  ru: Привет, как дела?
+  en: Hi, how are you?
