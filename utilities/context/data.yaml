@@ -1,0 +1,5 @@
+hello:
+  pattern: salom, {name} [surname] qandaysiz?
+  uz: salom, {name} [surname] qandaysiz?
+  ru: привет, {имя} [фамилия] как дела?
+  en: hi, {name} [surname] how are you?
