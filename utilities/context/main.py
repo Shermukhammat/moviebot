@@ -1,10 +1,15 @@
 from googletrans import Translator
-import yaml
-from file import UGUtils
-from myparser import PPUtils
 from copy import deepcopy
-tr = Translator()
 
+if __name__ == '__main__':
+    from file import UGUtils
+    from myparser import PPUtils
+else:
+    from .file import UGUtils
+    from .myparser import PPUtils 
+
+
+tr = Translator()
 
 
 class ContextHelper(PPUtils, UGUtils):
