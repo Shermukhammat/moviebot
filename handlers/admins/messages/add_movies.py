@@ -15,7 +15,8 @@ async def get_movie_title(update : types.Message, state : FSMContext):
         async with state.proxy() as data:
             data['title'] = update.text
 
-        await update.answer("Kino poster 🖼 rasmini jo'nating", reply_markup = DefoltButtons.back_button(cancle_button = True))
+        await update.answer(f"🎬 Kino nomi: {update.text} \nCaption: 🚫 \nJanir: 🚫 \nDavlat: 🚫 \nTil: 🚫 \n", 
+                            reply_markup = DefoltButtons.back_button(cancle_button = True))
 
     else:
         await update.answer("❌ Kino nomi 4 ta belgidan ko'p bo'lishi kerak")
@@ -32,7 +33,7 @@ async def get_movie_thumb(update : types.Message, state : FSMContext):
         await state.set_state(AdminStates.get_movie_title)
 
 
-@dp.message_handler(state = AdminStates.get_movie_video_resolution)
+@dp.message_handler(state = AdminStates.get_movie_video)
 async def get_movie_thumb(update : types.Message, state : FSMContext):
     if update.text == "❌ Bekor qilish":
         await state.reset_state()

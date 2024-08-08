@@ -21,19 +21,19 @@ class UsersDb:
             return True
         return False
 
-    def register_user(self, id : int, name : str):
+    def register_user(self, id : int, name : str, lang : str = 'uz'):
         time = now()
         status = Status.active
         
         try:
             con = sqlite3.connect(self.path)
             cursor = con.cursor()
-            cursor.execute("INSERT INTO users (id, registered, status, name) VALUES(?, ?, ?, ?);", (id, time, status, name))
+            cursor.execute("INSERT INTO users (id, registered, status, name, lang) VALUES(?, ?, ?, ?, ?);", (id, time, status, name, lang))
 
             con.commit()
             con.close()
 
-            self.users_cache[id] = {'registered' : time, 'status' : status, 'name' : name}
+            self.users_cache[id] = {'registered' : time, 'status' : status, 'name' : name, 'lang' : lang}
             return True
         
         except Exception as e:
@@ -68,8 +68,26 @@ class UsersDb:
             self.users_cache[id]['status'] = status 
         
         return updat_user_db_status(self.path, status, id)
-       
+    
+    def update_user_lang(self, id : int, lang : str):
+        if self.users_cache.get(id):
+            self.users_cache[id]['lang'] = lang
+        return update_user_db_lang(self.path, lang, id)
 
+
+def update_user_db_lang(path : str, lang : str, id : int) -> bool:
+    try:
+        con = sqlite3.connect(path)
+        cursor = con.cursor()
+        
+        cursor.execute(f"UPDATE users SET lang = {lang} WHERE id = {id};")
+        
+        con.commit()
+        con.close()
+        return True
+    
+    except:
+        return False
 
 
 def updat_user_db_status(path : str, status : int, id : int) -> bool:
@@ -90,9 +108,9 @@ def get_user_from_db(db_path : str, id : int) -> dict:
     con = sqlite3.connect(db_path)
     cursor = con.cursor()
     
-    for row in cursor.execute(f"SELECT registered, status, name FROM users WHERE id = {id};"):
+    for row in cursor.execute(f"SELECT registered, status, name, lang FROM users WHERE id = {id};"):
         con.close()
-        return {'registered' : row[0], 'status' : row[1], 'name' : row[2]}
+        return {'registered' : row[0], 'status' : row[1], 'name' : row[2], 'lang' : row[3]}
     
     con.close()
     

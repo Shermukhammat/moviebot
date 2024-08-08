@@ -69,9 +69,9 @@ class Context(ContextHelper):
             self._put_helper(pattern, src, key)
             
     def get(self, 
+            key : str,
             target : str = None,
-            key : str = 'hello',
-            **args):
+            **args) -> str:
         
         if self.data.get(key, None) == None:
             return None
@@ -88,4 +88,4 @@ class Context(ContextHelper):
 if __name__ == '__main__':
     con = Context('data.yaml')
     con.put_and_update("salom, {name} [surname] qandaysiz?", src='uz', key = 'hello')
-    print(con.get(target = 'en', key = 'hello', name="Shermuhammad", surname="Temirov"))
+    print(con.get('hello', target = 'en', name="Shermuhammad", surname="Temirov"))

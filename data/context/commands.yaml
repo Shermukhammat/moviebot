@@ -1,0 +1,15 @@
+start:
+  pattern: ✈️ Botni ishga tushrish
+  uz: ✈️ Botni ishga tushrish
+  ru: ✈️ Запустите бота
+  en: ✈️ Start the bot
+lang:
+  pattern: 🌐 Tilni o'zgartirish
+  uz: 🌐 Tilni o'zgartirish
+  ru: 🌐 Изменить язык
+  en: 🌐 Change language
+logout:
+  pattern: ☠️ Admin paneldan chiqish
+  uz: ☠️ Admin paneldan chiqish
+  ru: ☠️ Выйти из админ-панели
+  en: ☠️ Exit admin panel

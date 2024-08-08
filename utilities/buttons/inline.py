@@ -4,6 +4,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class InlineButtons:
+    resolutions = [240, 360, 480, 720, 1080, 1024, 1440, 2160]
     search_movie = InlineKeyboardMarkup(inline_keyboard = [[
         InlineKeyboardButton(text = '🔍 Kino izlash', switch_inline_query_current_chat = "")]
         ])
@@ -16,7 +17,7 @@ class InlineButtons:
 
             else:
                 buttons.add_button(InlineKeyboardButton(text = f"📹 {resolution}p", callback_data = str(resolution)))
-
+        buttons.add_button(InlineKeyboardButton(text = "⬅️ Orqaga", callback_data = "back"), new_line = True)
         return InlineKeyboardMarkup(inline_keyboard = buttons.get_buttons())
     
 
@@ -25,8 +26,25 @@ class InlineButtons:
             [InlineKeyboardButton(text = "🚀 Kino yuklash", callback_data = 'upload_movie'), InlineKeyboardButton(text = "➕ Yil", callback_data = "change_title")],
             [InlineKeyboardButton(text = "➕ Yil", callback_data = "add_year"), InlineKeyboardButton(text = "➕ Janir", callback_data = "add_geners")],
             [InlineKeyboardButton(text = "🏳️ Davlat", callback_data = "country"), InlineKeyboardButton(text = "🌐 Til", callback_data = "chose_lang")],
-            [InlineKeyboardButton(text = "⬇️ Saqlash", callback_data = "save_data")]
+            [InlineKeyboardButton(text = "⬇️ Saqlash", callback_data = "save_movie")]
         ])
+    
+    def lang_buttons(lang : str) -> InlineKeyboardMarkup:
+        if lang == 'uz':
+            return InlineKeyboardMarkup(inline_keyboard = [
+                [InlineKeyboardButton(text = "🇷🇺 Ruscha", callback_data = "ru"),
+                 InlineKeyboardButton(text = "🇬🇧 Inglizcha", callback_data = "en")]
+            ])
+        elif lang == 'ru':
+            return InlineKeyboardMarkup(inline_keyboard = [
+                [InlineKeyboardButton(text = "🇺🇿 Узбекский", callback_data = "uz"),
+                 InlineKeyboardButton(text = "🇬🇧 Английский", callback_data = "en")]
+            ])
+        
+        return InlineKeyboardMarkup(inline_keyboard = [
+                [InlineKeyboardButton(text = "🇺🇿 Uzbek", callback_data = "uz"),
+                 InlineKeyboardButton(text = "🇷🇺 Russian", callback_data = "ru")]
+            ])
     
 
 

@@ -15,7 +15,7 @@ class Params:
     
     def update(self):
         file = open(self.path, 'w')
-        file.write(json.dumps(self.data))
+        file.write(json.dumps(self.data, indent = 4))
         file.close()
         
     def update_pasword(self, pasword : str):

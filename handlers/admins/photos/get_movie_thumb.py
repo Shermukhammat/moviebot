@@ -34,7 +34,7 @@ async def get_movie_thumb2(update : types.Message, state : FSMContext):
 
 
 
-    await state.set_state(AdminStates.get_movie_video_resolution)
+    await state.set_state(AdminStates.edit_movie_menu)
     
     async with state.proxy() as data:
         data['thumb'] = url

@@ -1,0 +1,15 @@
+you_not_owner:
+  pattern: ❌ Sizda adminlik huquqi yo'q !
+  uz: ❌ Sizda adminlik huquqi yo'q !
+  ru: ❌ У вас нет прав администратора!
+  en: ❌ You do not have admin permison!
+owner_registred:
+  pattern: ✅ {name}, siz ega sifatida ro'yxatdan o'tdingiz !
+  uz: ✅ {name}, siz ega sifatida ro'yxatdan o'tdingiz !
+  ru: ✅ {имя}, вы зарегистрированы как владелец!
+  en: ✅ {name}, you are registered as an owner!
+somthing_went_wrong:
+  pattern: ❌ Afsus {name}, qandaydir xato yuz berdi
+  uz: ❌ Afsus {name}, qandaydir xato yuz berdi
+  ru: ❌ Извините, {имя}, что-то пошло не так.
+  en: ❌ Sorry {name}, something went wrong

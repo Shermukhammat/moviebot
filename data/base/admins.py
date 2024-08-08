@@ -22,18 +22,18 @@ class AdminsDb:
             return True
         return False
 
-    def register_admin(self, id : int, name : str, admin_type : int = AdminType.usual):
+    def register_admin(self, id : int, name : str, lang : str = 'uz', admin_type : int = AdminType.usual):
         time = now()
         
         try:
             con = sqlite3.connect(self.path)
             cursor = con.cursor()
-            cursor.execute("INSERT INTO admins (id, registered, type, name) VALUES(?, ?, ?, ?);", (id, time, admin_type, name))
+            cursor.execute("INSERT INTO admins (id, registered, type, name, lang) VALUES(?, ?, ?, ?, ?);", (id, time, admin_type, name, lang))
 
             con.commit()
             con.close()
 
-            self.admins_cache[id] = {'registered' : time, 'type' : admin_type, 'name' : name}
+            self.admins_cache[id] = {'registered' : time, 'type' : admin_type, 'name' : name, 'lang' : lang}
             return True
         
         except Exception as e:
@@ -63,15 +63,35 @@ class AdminsDb:
         con.commit()
         con.close()
 
+    def update_admin_lang(self, id : int, lang : str) -> bool:
+        if self.admins_cache.get(id):
+            self.admins_cache[id]['lang'] = lang
+        return update_admin_db_lang(self.path, lang, id)
+
+
+def update_admin_db_lang(path : str, lang : str, id : int) -> bool:
+    try:
+        con = sqlite3.connect(path)
+        cursor = con.cursor()
+        
+        cursor.execute(f"UPDATE admins SET lang = {lang} WHERE id = {id};")
+        
+        con.commit()
+        con.close()
+        return True
+    
+    except:
+        return False
+
 
     
 def get_admin_from_db(db_path : str, id : int) -> dict:
     con = sqlite3.connect(db_path)
     cursor = con.cursor()
     
-    for row in cursor.execute(f"SELECT name, registered, type FROM admins WHERE id = {id};"):
+    for row in cursor.execute(f"SELECT name, registered, type, lang FROM admins WHERE id = {id};"):
         con.close()
-        return {'registered' : row[1], 'type' : row[2], 'name' : row[0]}
+        return {'registered' : row[1], 'type' : row[2], 'name' : row[0], 'lang' : row[3]}
     
     con.close()
     
